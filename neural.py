@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 
 import csv
+from decimal import *
+import locale
+
+getcontext().prec = 7
+locale.setlocale(locale.LC_ALL, '')
+
 
 class UserData:
     data = []
@@ -58,6 +64,15 @@ class UserData:
             if row[self.c_RowNum] == rowNum:
                 return row
 
+    #Returns Decimal string sum of average userAmount of candidate list 
+    def getSumCandidateUsers(self, rowNum):
+        candidateValues = ['0.1', '0.2', '0.3']
+        targetRow = self.getRow(rowNum)
+        rawCand = [targetRow[i] for i in self.c_CandidateArr] #Filter candidate data
+        candidateValues = [locale.format_string(x.replace(',','.'), x) for x in rawCand]
+        decData = list(map(Decimal, candidateValues))
+        return sum(decData)
+
     def printSampleData(self):
         maxCount = 2
         for index, row in enumerate(self.data):
@@ -104,6 +119,7 @@ def main():
     neural.c_CandidateArr = org_c_CandidateArr
     print("candidate value x columns : %s" % neural.c_CandidateArr_x)
     print("candidate user# columns : %s" % neural.c_CandidateArr)
+    print("test sum 499 : %s" % neural.getSumCandidateUsers('499'))
     
 
 main()
