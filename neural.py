@@ -67,7 +67,6 @@ def readFile(fileName):
 
 
 def main():
-    print("Hello Elisa")
     neural = UserData(readFile('users.csv'))
     neural.printSampleData()
     neural.setTarget('L1547777')
