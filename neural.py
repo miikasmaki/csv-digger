@@ -32,12 +32,25 @@ class UserData:
 
     #Sets target cell string column parameters
     def setTarget(self, newTarget):
-        self.c_Target = self.data[0].index(newTarget)
-        self.c_Target_x = self.data[0].index('%s_x' % newTarget)
+        #Find column indexes and check that both are found. .index() throws if not found
+        target = self.data[0].index(newTarget)
+        target_x = self.data[0].index('%s_x' % newTarget)
+        #Store new values
+        self.c_Target = target
+        self.c_Target_x = target_x
         return 1
 
     #Sets candidate cells column parameters
-    def setCandidates(self, newCadidateArr):
+    def setCandidates(self, newCandidateArr):
+        newArr = []
+        newArr_x = []
+        #Find column indexes
+        for item in newCandidateArr:
+            newArr.append(self.data[0].index(item))
+            newArr_x.append(self.data[0].index('%s_x' % item))
+        #Store new values if all found
+        self.c_CandidateArr = newArr
+        self.c_CandidateArr_x = newArr_x
         return 1
     
     def getRow(self, rowNum):
@@ -74,8 +87,23 @@ def main():
     print("Target user# columns : %s" % neural.c_Target)
     print("candidate value x columns : %s" % neural.c_CandidateArr_x)
     print("candidate user# columns : %s" % neural.c_CandidateArr)
-    print("\nTesting testing\n-------------------")
+
+    #After this is mixed testing of functions. Remove or move to tests.
+    print("\nTesting testing.\n-------------------")
     print("row 1 %s" % neural.getRow('1'))
     print("row 499 %s" % neural.getRow('499'))
+
+    print("Try to adjust candidate list")
+    org_c_CandidateArr = neural.c_CandidateArr
+    org_c_CandidateArr_x = neural.c_CandidateArr_x
+    neural.setCandidates(['L264453','L264454'])
+    print("candidate value x columns : %s" % neural.c_CandidateArr_x)
+    print("candidate user# columns : %s" % neural.c_CandidateArr)
+    print("Revert original candidate list")
+    neural.c_CandidateArr_x = org_c_CandidateArr_x
+    neural.c_CandidateArr = org_c_CandidateArr
+    print("candidate value x columns : %s" % neural.c_CandidateArr_x)
+    print("candidate user# columns : %s" % neural.c_CandidateArr)
+    
 
 main()
