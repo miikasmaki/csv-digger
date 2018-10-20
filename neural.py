@@ -34,16 +34,16 @@ class UserData:
     def setTarget(self, newTarget):
         self.c_Target = self.data[0].index(newTarget)
         self.c_Target_x = self.data[0].index('%s_x' % newTarget)
-        return 1;
+        return 1
 
     #Sets candidate cells column parameters
     def setCandidates(self, newCadidateArr):
-        return 1;
+        return 1
     
     def getRow(self, rowNum):
         for index, row in enumerate(self.data):
             if row[self.c_RowNum] == rowNum:
-                return row;
+                return row
 
     def printSampleData(self):
         maxCount = 2
@@ -60,7 +60,7 @@ def readFile(fileName):
         retArr = []
         for row in readCSV:
             retArr.append(row)
-        return retArr;
+        return retArr
         
         
             
