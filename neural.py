@@ -14,7 +14,7 @@ class UserData:
     def __init__(self, data):
         self.data = data
         self.c_RowNum = data[0].index('Rownum')
-        #ToDo: Remove hard coding of target cell and other cells
+        
         self.c_Target_x = data[0].index('L1547777_x')
         self.c_Target = data[0].index('L1547777')
         self.c_CandidateArr_x = [
@@ -60,16 +60,19 @@ class UserData:
         return 1
     
     def getRow(self, rowNum):
-        for index, row in enumerate(self.data):
+        for row in self.data:
             if row[self.c_RowNum] == rowNum:
                 return row
+                break
 
     #Returns Decimal string sum of average userAmount of candidate list 
     def getSumCandidateUsers(self, rowNum):
         candidateValues = ['0.1', '0.2', '0.3']
         targetRow = self.getRow(rowNum)
         rawCand = [targetRow[i] for i in self.c_CandidateArr] #Filter candidate data
-        candidateValues = [locale.format_string(x.replace(',','.'), x) for x in rawCand]
+        
+        #candidateValues = [locale.format_string(x.replace(',','.'), x) for x in rawCand]
+        candidateValues = [x.replace(',','.') for x in rawCand] # this should be replaced with proper locale function
         decData = list(map(Decimal, candidateValues))
         return sum(decData)
 
@@ -123,6 +126,15 @@ def main():
     neural = UserData(readFile('users.csv'))
     neural.printSampleData()
     neural.setTarget('L1547777')
+    neural.setCandidates([
+            'L1022212',
+            'L1100545',
+            'L1132034',
+            'L1132035',
+            'L1143298',
+            'L1384705',
+            'L264453',
+            'L264454' ])
     print("Target value x columns : %s" % neural.c_Target_x)
     print("Target user# columns : %s" % neural.c_Target)
     print("candidate value x columns : %s" % neural.c_CandidateArr_x)
