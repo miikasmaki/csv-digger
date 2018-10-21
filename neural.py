@@ -74,13 +74,13 @@ class UserData:
         return sum(decData)
 
     def printSampleData(self):
-        maxCount = 2
-        for index, row in enumerate(self.data):
+        print("Sample first two rows of data array")
+        print("***")
+        for index, row in enumerate(self.data[:2]):
             label = "Header" if index == 0 else "Data"
             print("%s Row : %s" % (label, index))
             print(row)
-            if index >= maxCount:
-                break
+        print("***")
 
 def readFile(fileName):
     with open(fileName, newline='') as csvfile:
