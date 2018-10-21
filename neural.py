@@ -90,9 +90,34 @@ def readFile(fileName):
             retArr.append(row)
         return retArr
         
-        
-            
+def printUsersFromRow(row, instance):
+    rowIndex = instance.data.index(instance.getRow(row))
+    targetUsers = instance.data[rowIndex][instance.c_Target]
+    testMessage = "Row %s Target users: %s, Candidate users sum: %s"
+    print(testMessage % (row, targetUsers, instance.getSumCandidateUsers(row)))
 
+def testingTesting(neural):
+    print("\nTesting testing.\n-------------------")
+    print("row 1 %s" % neural.getRow('1'))
+    print("row 163 %s" % neural.getRow('163'))
+    print("row 331 %s" % neural.getRow('331'))
+    print("row 499 %s" % neural.getRow('499'))
+
+    print("Try to adjust candidate list")
+    org_c_CandidateArr = neural.c_CandidateArr
+    org_c_CandidateArr_x = neural.c_CandidateArr_x
+    neural.setCandidates(['L264453','L264454'])
+    print("candidate value x columns : %s" % neural.c_CandidateArr_x)
+    print("candidate user# columns : %s" % neural.c_CandidateArr)
+    testRow = '163'; print("test sum %s : %s" % (testRow, neural.getSumCandidateUsers(testRow)))
+    testRow = '331'; print("test sum %s : %s" % (testRow, neural.getSumCandidateUsers(testRow)))
+    testRow = '499'; print("test sum %s : %s" % (testRow, neural.getSumCandidateUsers(testRow)))
+    
+    print("Revert original candidate list")
+    neural.c_CandidateArr_x = org_c_CandidateArr_x
+    neural.c_CandidateArr = org_c_CandidateArr
+    print("candidate value x columns : %s" % neural.c_CandidateArr_x)
+    print("candidate user# columns : %s" % neural.c_CandidateArr)
 
 def main():
     neural = UserData(readFile('users.csv'))
@@ -102,24 +127,17 @@ def main():
     print("Target user# columns : %s" % neural.c_Target)
     print("candidate value x columns : %s" % neural.c_CandidateArr_x)
     print("candidate user# columns : %s" % neural.c_CandidateArr)
+    printUsersFromRow('163', neural)
+    printUsersFromRow('331', neural)
+    printUsersFromRow('499', neural)
+    printUsersFromRow('164', neural)
+    printUsersFromRow('332', neural)
+    printUsersFromRow('500', neural)
+    printUsersFromRow('165', neural)
+    printUsersFromRow('333', neural)
+    printUsersFromRow('501', neural)
 
     #After this is mixed testing of functions. Remove or move to tests.
-    print("\nTesting testing.\n-------------------")
-    print("row 1 %s" % neural.getRow('1'))
-    print("row 499 %s" % neural.getRow('499'))
-
-    print("Try to adjust candidate list")
-    org_c_CandidateArr = neural.c_CandidateArr
-    org_c_CandidateArr_x = neural.c_CandidateArr_x
-    neural.setCandidates(['L264453','L264454'])
-    print("candidate value x columns : %s" % neural.c_CandidateArr_x)
-    print("candidate user# columns : %s" % neural.c_CandidateArr)
-    print("Revert original candidate list")
-    neural.c_CandidateArr_x = org_c_CandidateArr_x
-    neural.c_CandidateArr = org_c_CandidateArr
-    print("candidate value x columns : %s" % neural.c_CandidateArr_x)
-    print("candidate user# columns : %s" % neural.c_CandidateArr)
-    print("test sum 499 : %s" % neural.getSumCandidateUsers('499'))
-    
+    # testingTesting(neural) # Mixed test set
 
 main()
