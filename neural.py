@@ -3,10 +3,13 @@
 import csv
 from decimal import *
 import locale
+from datetime import datetime
 
 getcontext().prec = 7
 locale.setlocale(locale.LC_ALL, '')
 
+def posixToUTC(posixStr):
+    return datetime.utcfromtimestamp(int(posixStr)).strftime('%Y-%m-%dT%H:%M:%SZ')
 
 class UserData:
     data = []
@@ -84,6 +87,23 @@ class UserData:
             print("%s Row : %s" % (label, index))
             print(row)
         print("***")
+    
+    def printTableHeader (self, columns):
+        row_format ="{:>25}" * (len(columns))
+        selectedData = []
+        for item in columns:
+            selectedData.append(self.data[0][item])
+        print (row_format.format(*selectedData))
+        return row_format
+    
+    def printTableRowData(self, rowArr, row_format, columns, columnFormat):
+        for rowStr in rowArr:
+            row = self.data.index(self.getRow(rowStr))
+            selectedData = []
+            for index, item in enumerate(columns):
+                formattedData = self.data[row][item] if columnFormat[index] is None else columnFormat[index](self.data[row][item])
+                selectedData.append(formattedData)
+            print (row_format.format(*selectedData))
 
 def readFile(fileName):
     with open(fileName, newline='') as csvfile:
@@ -96,8 +116,10 @@ def readFile(fileName):
 def printUsersFromRow(row, instance):
     rowIndex = instance.data.index(instance.getRow(row))
     targetUsers = instance.data[rowIndex][instance.c_Target]
-    testMessage = "Row %s Target users: %s, Candidate users sum: %s"
-    print(testMessage % (row, targetUsers, instance.getSumCandidateUsers(row)))
+    posix_time = int(instance.data[rowIndex][0])
+    time = datetime.utcfromtimestamp(posix_time).strftime('%Y-%m-%dT%H:%M:%SZ')
+    testMessage = "Row %s, Date %s, Target users: %s, Candidate users sum: %s"
+    print(testMessage % (row, time, targetUsers, instance.getSumCandidateUsers(row)))
 
 def testingTesting(neural):
     print("\nTesting testing.\n-------------------")
@@ -121,6 +143,13 @@ def testingTesting(neural):
     neural.c_CandidateArr = org_c_CandidateArr
     print("candidate value x columns : %s" % neural.c_CandidateArr_x)
     print("candidate user# columns : %s" % neural.c_CandidateArr)
+    print("\n")
+    
+    columns = [neural.c_RowNum, 0, neural.c_Target]
+    columnFormat = [None, posixToUTC, None]
+    rowFormat = neural.printTableHeader(columns)
+    tableRows = ['163','331','499','164','332','500','165','333','501']
+    neural.printTableRowData(tableRows, rowFormat, columns, columnFormat)
 
 def main():
     neural = UserData(readFile('users.csv'))
@@ -148,6 +177,7 @@ def main():
     printUsersFromRow('165', neural)
     printUsersFromRow('333', neural)
     printUsersFromRow('501', neural)
+    
 
     #After this is mixed testing of functions. Remove or move to tests.
     # testingTesting(neural) # Mixed test set
