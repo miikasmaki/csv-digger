@@ -8,6 +8,17 @@ from datetime import datetime
 getcontext().prec = 7
 locale.setlocale(locale.LC_ALL, '')
 
+targetRows = ['163','331','499','164','332','500','165','333','501']
+candidates = [
+            'L1022212',
+            'L1100545',
+            'L1132034',
+            'L1132035',
+            'L1143298',
+            'L1384705',
+            'L264453',
+            'L264454' ]
+
 def posixToUTC(posixStr):
     return datetime.utcfromtimestamp(int(posixStr)).strftime('%Y-%m-%dT%H:%M:%SZ')
 
@@ -158,37 +169,22 @@ def testingTesting(neural):
     columnFormat = [None, posixToUTC, None]
     rowFormat = neural.printTableHeader(columns)
     tableRows = ['163','331','499','164','332','500','165','333','501']
-    neural.printTableRowData(tableRows, rowFormat, columns, columnFormat)
+    neural.printTableRowData(targetRows, rowFormat, columns, columnFormat)
     print("Candidate sums")
-    neural.printCandidateSums(tableRows)
+    neural.printCandidateSums(targetRows)
+    
 
 def main():
     neural = UserData(readFile('users.csv'))
     neural.printSampleData()
     neural.setTarget('L1547777')
-    neural.setCandidates([
-            'L1022212',
-            'L1100545',
-            'L1132034',
-            'L1132035',
-            'L1143298',
-            'L1384705',
-            'L264453',
-            'L264454' ])
+    neural.setCandidates(candidates)
     print("Target value x columns : %s" % neural.c_Target_x)
     print("Target user# columns : %s" % neural.c_Target)
     print("Candidate value x columns : %s" % neural.c_CandidateArr_x)
     print("Candidate user# columns : %s" % neural.c_CandidateArr)
-    printUsersFromRow('163', neural)
-    printUsersFromRow('331', neural)
-    printUsersFromRow('499', neural)
-    printUsersFromRow('164', neural)
-    printUsersFromRow('332', neural)
-    printUsersFromRow('500', neural)
-    printUsersFromRow('165', neural)
-    printUsersFromRow('333', neural)
-    printUsersFromRow('501', neural)
-    
+    for row in targetRows:
+        printUsersFromRow(row, neural)
 
     #After this is mixed testing of functions. Remove or move to tests.
     # testingTesting(neural) # Mixed test set
