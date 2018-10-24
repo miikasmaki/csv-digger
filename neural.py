@@ -168,7 +168,6 @@ def testingTesting(neural):
     columns = [neural.c_RowNum, 0, neural.c_Target]
     columnFormat = [None, posixToUTC, None]
     rowFormat = neural.printTableHeader(columns)
-    tableRows = ['163','331','499','164','332','500','165','333','501']
     neural.printTableRowData(targetRows, rowFormat, columns, columnFormat)
     print("Candidate sums")
     neural.printCandidateSums(targetRows)
