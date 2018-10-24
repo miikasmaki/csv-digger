@@ -92,7 +92,7 @@ class UserData:
         row_format ="{:>25}" * (len(columns))
         selectedData = []
         for item in columns:
-            selectedData.append(self.data[0][item])
+            selectedData.append(self.data[0][item] + " ")
         print (row_format.format(*selectedData))
         return row_format
     
@@ -102,9 +102,15 @@ class UserData:
             selectedData = []
             for index, item in enumerate(columns):
                 formattedData = self.data[row][item] if columnFormat[index] is None else columnFormat[index](self.data[row][item])
-                selectedData.append(formattedData)
+                selectedData.append(formattedData + " ")
             print (row_format.format(*selectedData))
 
+    def printCandidateSums(self, rowArr):
+        for row in rowArr:
+            sumCandidateUsers = self.getSumCandidateUsers(row)
+            sumCandidateUsersStr = str(sumCandidateUsers).replace('.',',')
+            print(sumCandidateUsersStr)
+            
 def readFile(fileName):
     with open(fileName, newline='') as csvfile:
         readCSV = csv.reader(csvfile, delimiter=';')
@@ -118,8 +124,11 @@ def printUsersFromRow(row, instance):
     targetUsers = instance.data[rowIndex][instance.c_Target]
     posix_time = int(instance.data[rowIndex][0])
     time = datetime.utcfromtimestamp(posix_time).strftime('%Y-%m-%dT%H:%M:%SZ')
+    sumCandidateUsers = instance.getSumCandidateUsers(row)
+    sumCandidateUsersStr = str(sumCandidateUsers).replace('.',',')
     testMessage = "Row %s, Date %s, Target users: %s, Candidate users sum: %s"
-    print(testMessage % (row, time, targetUsers, instance.getSumCandidateUsers(row)))
+    print(testMessage % (row, time, targetUsers, sumCandidateUsersStr))
+
 
 def testingTesting(neural):
     print("\nTesting testing.\n-------------------")
@@ -150,6 +159,8 @@ def testingTesting(neural):
     rowFormat = neural.printTableHeader(columns)
     tableRows = ['163','331','499','164','332','500','165','333','501']
     neural.printTableRowData(tableRows, rowFormat, columns, columnFormat)
+    print("Candidate sums")
+    neural.printCandidateSums(tableRows)
 
 def main():
     neural = UserData(readFile('users.csv'))
